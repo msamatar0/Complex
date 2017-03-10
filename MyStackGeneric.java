@@ -1,3 +1,6 @@
+
+import java.util.InputMismatchException;
+
 /**
  *
  * @author msamatar0
@@ -17,21 +20,30 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
         remove(size() - 1);
         return n;
     }
-    public E binaryOperator(String operator) throws ArithmeticException{
-        E o;
-        if(size() < 2)
-            throw new ArithmeticException("ArithmeticException need two operands");
+    public E binaryOperator(String operator) throws ArithmeticException, InputMismatchException{
+        E o, o1, o2;
         switch(operator){
             case "+":
-                o = plus(pop(), pop());
+                o1 = pop();
+                o2 = pop();
+                o = plus(o2, o1);
+                push(o);
                 break;
             case "-":
-                o = minus(pop(), pop());
+                o1 = pop();
+                o2 = pop();
+                o = minus(o2, o1);
+                push(o);
                 break;
             case "*":
-                o = multiply(pop(), pop());
+                o1 = pop();
+                o2 = pop();
+                o = multiply(o2, o1);
+                push(o);
                 break;
             default:
+                if(operator.length() > 1)
+                    throw new InputMismatchException("InputMismatchException too long: " + operator);
                 o = null;
                 break;
         }
@@ -41,7 +53,7 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
         StringBuilder sb = new StringBuilder();
         
         while(in.hasNext()){
-            String s = in.next();
+            String s = in.next();            
             try{
                 E o = newElement(s);
                 push(o);
@@ -53,10 +65,14 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
                     out.println(this);
                 }
                 else
-                    sb.append(binaryOperator(s));
-            }
-            catch(Exception e){
-                out.println(e.getMessage());
+                    try{
+                        sb.append(binaryOperator(s));
+                    }
+                    catch(InputMismatchException ie){
+                        String ex = ie.getMessage();
+                        sb.append(ex);
+                        out.println(ex);
+                    }
             }
             sb.append(' ');
         }

@@ -101,32 +101,40 @@ public abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
         System.out.println();
       }
     }
-    public E determinant(E[][] m, int n){
+    public E determinant(E[][] m){
+        if(m.length != m[0].length)
+            return null;
         E det = newElement("0");
-        E[][] temp = (E[][])new Object[n][n];
+        E[][] temp = (E[][])new Object[m.length][m.length];
         switch(m.length){
             case 1:
                 return m[0][0];
             case 2:
                 return minus(multiply(m[0][0], m[1][1]), multiply(m[0][1], m[1][0]));
             default:
-                for(int idx = 0; idx < n; ++idx){
+                for(int idx = 0; idx < m.length; ++idx){
                     int a = 0, b = 0;
-                    for(int i = 0; i < n; ++i)
-                        for(int j = 0; j < n; ++j){
+                    for(int i = 0; i < m.length; ++i)
+                        for(int j = 0; j < m.length; ++j){
                             if(j == idx)
                                 continue;
                             temp[a][b] = m[i][j];
                             b++;
-                            if(b == n - 1){
+                            if(b == m.length - 1){
                                 a++;
                                 b = 0;
                             }
-                        }                            
-                det = plus(det,
-                        multiply(m[0][idx],
-                                (idx % 2 == 0? minus(newElement("0"), determinant(temp, temp.length - 1)):
-                                        determinant(temp, temp.length - 1))));
+                        }
+                    E[][] temp2 = (E[][]) new Object[m.length - 1][m[0].length - 1];
+                    
+                    for(int i = 0; i < m.length - 1; ++i)
+                        for(int j = 0; j < m.length - 1; ++j)
+                            temp2[i][j] = temp[i][j];
+                    
+                    det = plus(det,
+                            multiply(m[0][idx],
+                                (idx % 2 == 0? minus(newElement("0"), determinant(temp2)):
+                                    determinant(temp2))));
                 }
                 break;
         }

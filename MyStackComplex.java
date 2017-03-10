@@ -20,6 +20,7 @@ public class MyStackComplex extends MyStackGeneric<Complex>{
         return m.multiply(n);
     }
     public static void main(String[] args){
-        new MyStackComplex().processIO(new java.util.Scanner(System.in), System.out);
+        String data = "2 3 2+3i 2-3i i + + p 2 3.5+i * p 1.0i -2.0i + p 2.0 3i + * p 3 + + + - p";
+        new MyStackComplex().processIO(new java.util.Scanner(data), System.out);
     }
 }

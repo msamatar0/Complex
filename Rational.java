@@ -8,13 +8,13 @@ public class Rational implements Comparable<Rational>{
         numerator = (d > 0? 1 : -1) * n / g;
         denominator = Math.abs(d) / g;
     }
-    public Rational(String s) throws InputMismatchException, NumberFormatException{
-        long n, d;
+    public Rational(String s) throws NumberFormatException{
+        long n = 0, d = 0;
         boolean one = s.matches("^-?\\d+$"),
                 two = s.matches("^-?\\d+/-?\\d+$");
-        if(!one && !two)
-            throw new InputMismatchException("InputMismatchException unknown command: " + s);
-        else if(two){
+        //if(!one && !two)
+            //throw new InputMismatchException("InputMismatchException unknown command: " + s);
+        /*else*/ if(two){
             String part[] = s.split("/");
             n = Long.parseLong(part[0]);
             d = Long.parseLong(part[1]);
@@ -24,9 +24,10 @@ public class Rational implements Comparable<Rational>{
             d = 1;
         }
         else
-            throw new InputMismatchException("InputMismatchException unknown command: " + s);
-        if(d == 0)
-            throw new InputMismatchException("InputMismatchException too long: " + s);
+            throw new NumberFormatException();
+//throw new InputMismatchException("InputMismatchException unknown command: " + s);
+        //if(d == 0)
+            //throw new InputMismatchException("InputMismatchException too long: " + s);
         long g = gcd(n, d);
         numerator = (d > 0? 1 : -1) * n / g;
         denominator = Math.abs(d) / g;

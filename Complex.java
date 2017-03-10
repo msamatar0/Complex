@@ -25,32 +25,34 @@ public class Complex implements Comparable<Complex>{
         Pattern p = Pattern.compile("(?<real>^-?\\d*\\.?\\d+?)??" + "(?<imag>[-+]*\\d*\\.?\\d*i$)??");
         Matcher m = p.matcher(s);
         m.matches();
-        System.out.println(m.group("imag"));
-        if(m.group("real") == null)
-            real = 0;
-        else
-            real = Double.parseDouble(m.group("real"));
-        if(m.group("imag") == null)
-            imag = 0;
-        else{
-            String i = m.group("imag").replace("i", "");
-            switch(i.length()){
-                case 0:
-                    if(i.equals("+"))
-                        imag = 1;
-                    else if(i.equals("-"))
-                        imag = -1;
-                    else if(i.equals("i"))
-                        imag = 1;
-                    break;
-                default:
-                    //if(real != 0 && (m.group("imag").charAt(0) == '+' || m.group("imag").charAt(0) == '-'))
-                        //throw new NumberFormatException();
-                    imag = Double.parseDouble(i);
+        try{
+            if(m.group("real") == null || m.group("real").length() == 0)
+                real = 0;
+            else
+                real = Double.parseDouble(m.group("real"));
+            if(m.group("imag") == null)
+                imag = 0;
+            else{
+                String i = m.group("imag").replace("i", "");
+                switch(i.length()){
+                    case 1:
+                        if(i.equals("+"))
+                            imag = 1;
+                        else if(i.equals("-"))
+                            imag = -1;
+                        else if(i.equals("i"))
+                            imag = 1;
+                        break;
+                    default:
+                        imag = i.equals("")? 1 : Double.parseDouble(i);
+                }
+                if(m.group("real") != null && m.group("imag") != null)
+                    if(m.group("imag").charAt(0) != '+' && m.group("imag").charAt(0) != '-')
+                        throw new NumberFormatException();
             }
-            if(m.group("real") != null && m.group("imag") != null)
-                if(m.group("imag").charAt(0) != '+' && m.group("imag").charAt(0) != '-')
-                    throw new NumberFormatException();
+        }
+        catch(IllegalStateException e){
+            throw new NumberFormatException();
         }
     }
     public double getReal(){
