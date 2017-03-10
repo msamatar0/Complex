@@ -4,7 +4,7 @@
  * @param <E>
  */
 abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
-    protected abstract E newElement(String elem);
+    protected abstract E newElement(String elem) throws NumberFormatException;
     public abstract E plus(E m, E n);
     public abstract E minus(E m, E n);
     public abstract E multiply(E m, E n);
@@ -43,9 +43,11 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
         while(in.hasNext()){
             String s = in.next();
             try{
-                sb.append(newElement(s));
+                E o = newElement(s);
+                push(o);
+                sb.append(o);
             }
-            catch(ArithmeticException e){
+            catch(NumberFormatException e){
                 if(s.equals("p")){
                     sb.append(this);
                     out.println(this);

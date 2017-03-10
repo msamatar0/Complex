@@ -4,10 +4,8 @@
  */
 public class MyStackComplex extends MyStackGeneric<Complex>{
     @Override
-    protected Complex newElement(String elem){
-        Complex c = new Complex(elem);
-        push(c);
-        return c;
+    protected Complex newElement(String elem) throws NumberFormatException{
+        return new Complex(elem);
     }
     @Override
     public Complex plus(Complex m, Complex n){
@@ -24,6 +22,4 @@ public class MyStackComplex extends MyStackGeneric<Complex>{
     public static void main(String[] args){
         new MyStackComplex().processIO(new java.util.Scanner(System.in), System.out);
     }
-
 }
-

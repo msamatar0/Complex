@@ -2,7 +2,6 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  *
  * @author msamatar0
@@ -22,7 +21,7 @@ public class Complex implements Comparable<Complex>{
         real = r;
         imag = i;
     }
-    public Complex(String s){
+    public Complex(String s) throws NumberFormatException{
         Pattern p = Pattern.compile("(?<real>^-?\\d*\\.?\\d+?)??" + "(?<imag>[-+]*\\d*\\.?\\d*i$)??");
         Matcher m = p.matcher(s);
         m.matches();

@@ -18,16 +18,18 @@ public abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     @Override
     public String processIO(Scanner in, PrintStream out){
         StringBuilder sb = new StringBuilder();
-        switch(in.next().toLowerCase()){
-            case "matrix":
-                switch(in.next().toLowerCase()){
-                    case "create":
-                        tree.put(in.next(), createMatrix(in));
-                        break;
-                }
-                break;
-            default:
-                sb.append(super.processIO(in, out));
+        while(in.hasNext()){
+            switch(in.next().toLowerCase()){
+                case "matrix":
+                    switch(in.next().toLowerCase()){
+                        case "create":
+                            tree.put(in.next(), createMatrix(in));
+                            break;
+                    }
+                    break;
+                default:
+                    sb.append(super.processIO(in, out));
+            }
         }
         return sb.toString();   
     }
@@ -73,7 +75,7 @@ public abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
         for(int i = 0; i < 0; ++i)
             for(int j = 0; j < i; ++j)
                 matrix[i][j] = newElement(in.next());
-        return null;
+        return matrix;
     }
     public void printResult(Number[][] m1, Number[][] m2, Number[][] m3, char op) {
         for (int i = 0; i < m1.length; i++) {
@@ -99,9 +101,35 @@ public abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
         System.out.println();
       }
     }
-//    @Override
-//    public boolean equals(Object o){
-//        GenericMatrixMap<E> m = (GenericMatrixMap<E>)o;
-//        for(int i = 0; i < )
-//    }
+    public E determinant(E[][] m, int n){
+        E det = newElement("0");
+        E[][] temp = (E[][])new Object[n][n];
+        switch(m.length){
+            case 1:
+                return m[0][0];
+            case 2:
+                return minus(multiply(m[0][0], m[1][1]), multiply(m[0][1], m[1][0]));
+            default:
+                for(int idx = 0; idx < n; ++idx){
+                    int a = 0, b = 0;
+                    for(int i = 0; i < n; ++i)
+                        for(int j = 0; j < n; ++j){
+                            if(j == idx)
+                                continue;
+                            temp[a][b] = m[i][j];
+                            b++;
+                            if(b == n - 1){
+                                a++;
+                                b = 0;
+                            }
+                        }                            
+                det = plus(det,
+                        multiply(m[0][idx],
+                                (idx % 2 == 0? minus(newElement("0"), determinant(temp, temp.length - 1)):
+                                        determinant(temp, temp.length - 1))));
+                }
+                break;
+        }
+        return det;
+    }
 }

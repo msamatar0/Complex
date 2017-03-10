@@ -4,10 +4,8 @@
  */
 public class MyStackInteger extends MyStackGeneric<Integer>{
     @Override
-    protected Integer newElement(String elem){
-        Integer i = new Integer(elem);
-        push(i);
-        return i;
+    protected Integer newElement(String elem) throws NumberFormatException{
+        return new Integer(elem);
     }
     @Override
     public Integer plus(Integer m, Integer n){

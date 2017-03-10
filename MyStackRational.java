@@ -4,10 +4,8 @@
  */
 public class MyStackRational extends MyStackGeneric<Rational>{
     @Override
-    protected Rational newElement(String elem){
-        Rational r = new Rational(elem);
-        push(r);
-        return r;
+    protected Rational newElement(String elem) throws NumberFormatException{
+        return new Rational(elem);
     }
     @Override
     public Rational plus(Rational m, Rational n){
