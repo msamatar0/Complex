@@ -22,7 +22,7 @@ public class MyStack extends ArrayList<Integer>{
         return sb.toString();
     }
     public static void main(String[] args) {
-        Scanner in = new Scanner("bab 1.232 -12 5431 643 g h chargers rule + + p + + + +");
+        Scanner in = new Scanner(System.in);
         MyStack ms = new MyStack();
         String s; 
         while(in.hasNext()){
