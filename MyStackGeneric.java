@@ -43,17 +43,16 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
                 break;
             default:
                 if(operator.length() > 1)
-                    throw new InputMismatchException("InputMismatchException too long: " + operator);
+                    throw new InputMismatchException("InputMismatchException unknown command: " + operator);
                 o = null;
-                break;
         }
         return o;
     }
     public String processIO(java.util.Scanner in, java.io.PrintStream out){
         StringBuilder sb = new StringBuilder();
-        
+
         while(in.hasNext()){
-            String s = in.next();            
+            String s = in.next();
             try{
                 E o = newElement(s);
                 push(o);
