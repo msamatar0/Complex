@@ -23,6 +23,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     public String processIO(Scanner in, PrintStream out){
         StringBuilder sb = new StringBuilder();
         while(in.hasNext()){
+            try{
             String s = in.next();
             switch(s){
                 case "Matrix":
@@ -93,11 +94,15 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                             ;
                             break;
                         default:
-                            throw new InputMismatchException("unknown command " + s + " after Matrix");
+                            throw new InputMismatchException("unknown command " + s + " after TreeMap");
                     }
                     break;
                 default:
                     sb.append(super.processIO(in, out));
+            }
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
             }
         }
         return sb.toString();
@@ -112,9 +117,10 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     }
 
     protected final E[][] createMatrix(Scanner in){
-        E[][] matrix = (E[][])new Object[1][1];
-        for(int i = 0; i < 0; ++i)
-            for(int j = 0; j < i; ++j)
+        int row = in.nextInt(), col = in.nextInt();
+        E[][] matrix = (E[][])new Object[row][col];
+        for(int i = 0; i < row; ++i)
+            for(int j = 0; j < col; ++j)
                 matrix[i][j] = newElement(in.next());
         return matrix;
     }
@@ -204,36 +210,38 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     //Generic ver. of Professor Java determinant function
     public E determinant(E[][] matrix){
         E sum = newElement("0"), s;
-        if(matrix.length == 1)
-            return matrix[0][0];
-        else if(matrix.length == 2)
-            return minus(multiply(matrix[0][0], matrix[1][1]), multiply(matrix[0][1], matrix[1][0]));
-        else if(matrix.length == 3)
-            return minus(
+        switch (matrix.length) {
+            case 1:
+                return matrix[0][0];
+            case 2:
+                return minus(multiply(matrix[0][0], matrix[1][1]), multiply(matrix[0][1], matrix[1][0]));
+            case 3:
+                return minus(
                         plus(multiply(matrix[0][0], multiply(matrix[1][1], matrix[2][2])),
-                        plus(multiply(matrix[0][1], multiply(matrix[1][2], matrix[2][0])),
-                            multiply(matrix[0][2], multiply(matrix[1][0], matrix[2][1])))),
+                                plus(multiply(matrix[0][1], multiply(matrix[1][2], matrix[2][0])),
+                                        multiply(matrix[0][2], multiply(matrix[1][0], matrix[2][1])))),
                         minus(multiply(matrix[0][2], multiply(matrix[1][1], matrix[2][0])),
-                        minus(multiply(matrix[0][0], multiply(matrix[2][2], matrix[2][1])),
-                            multiply(matrix[0][1], multiply(matrix[1][0], matrix[2][2]))))
-                    );
-        else
-            for(int i = 0; i < matrix.length; i++){
-                E[][] smaller = (E[][])new Object[matrix.length-1][matrix.length-1];
-                for(int a = 1; a < matrix.length; ++a){
-                    for(int b = 0; b < matrix.length; ++b){
-                        if(b < i)
-                            smaller[a - 1][b] = matrix[a][b];
-                        else
-                            smaller[a - 1][b - 1] = matrix[a][b];
+                                minus(multiply(matrix[0][0], multiply(matrix[2][2], matrix[2][1])),
+                                        multiply(matrix[0][1], multiply(matrix[1][0], matrix[2][2]))))
+                            );
+            default:
+                for(int i = 0; i < matrix.length; i++){
+                    E[][] smaller = (E[][])new Object[matrix.length-1][matrix.length-1];
+                    for(int a = 1; a < matrix.length; ++a){
+                        for(int b = 0; b < matrix.length; ++b){
+                            if(b < i)
+                                smaller[a - 1][b] = matrix[a][b];
+                            else
+                                smaller[a - 1][b - 1] = matrix[a][b];
+                        }
                     }
-                }
-                if(i % 2 == 0)
-                    s = newElement("1");
-                else
-                    s = newElement("-1");
-              sum = plus(sum, multiply(s, multiply(matrix[0][i], (determinant(smaller)))));
-            }
+                    if(i % 2 == 0)
+                        s = newElement("1");
+                    else
+                        s = newElement("-1");
+                    sum = plus(sum, multiply(s, multiply(matrix[0][i], (determinant(smaller)))));
+                }   break;
+        }
         return sum;
     }
 
