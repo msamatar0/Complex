@@ -26,7 +26,8 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
             String s = in.next();
             switch(s){
                 case "Matrix":
-                    switch(s = in.next()){
+                    s = in.next();
+                    switch(s){
                         case "Create":
                             sb.append(matrixMap.put(in.next(), createMatrix(in)));
                             break;
@@ -34,7 +35,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                             sb.append(printMatrix(get(in.next())));
                             break;
                         case "Identical":
-                            //sb.append(minus);
+                            //sb.append(minus(get(in.next()), get(in.next())));
                             break;
                         case "Multiply":
                             sb.append(put(in.next(), multiplyMatrix(get(in.next()), get(in.next()))));
@@ -59,7 +60,8 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                     }
                     break;
                 case "TreeMap":
-                    switch(s = in.next()){
+                    s = in.next();
+                    switch(s){
                         case "Size":
                             sb.append(matrixMap.size());
                             break;
