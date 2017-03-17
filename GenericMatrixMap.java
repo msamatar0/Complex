@@ -8,7 +8,8 @@ import java.util.*;
  */
 
 abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
-    private TreeMap<String, E[][]> matrixMap = new TreeMap<>(Comparator.naturalOrder());
+    private final TreeMap<String, E[][]> matrixMap = new TreeMap<>
+        ((String a, String b) -> { return a.length() - b.length() == 0? b.compareTo(a) : b.length() - a.length(); } );
 
     @Override
     public abstract E plus(E m, E n);
@@ -22,87 +23,105 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     @Override
     public String processIO(Scanner in, PrintStream out){
         StringBuilder sb = new StringBuilder();
+        String m, s;
+        boolean result = false;
         while(in.hasNext()){
             try{
-            String s = in.next();
-            switch(s){
-                case "Matrix":
-                    s = in.next();
-                    switch(s){
-                        case "Create":
-                            sb.append(matrixMap.put(in.next(), createMatrix(in)));
-                            break;
-                        case "Print":
-                            sb.append(printMatrix(get(in.next())));
-                            break;
-                        case "Identical":
-                            //sb.append(minus(get(in.next()), get(in.next())));
-                            break;
-                        case "Multiply":
-                            sb.append(put(in.next(), multiplyMatrix(get(in.next()), get(in.next()))));
-                            break;
-                        case "Plus":
-                            sb.append(put(in.next(), plusMatrix(get(in.next()), get(in.next()))));
-                            break;
-                        case "Minus":
-                            sb.append(put(in.next(), minusMatrix(get(in.next()), get(in.next()))));
-                            break;
-                        case "PrintResult":
-                            ;
-                            break;
-                        case "Sum":
-                            sb.append(put(in.next(), plusMatrix(get(in.next()), get(in.next()))));
-                            break;
-                        case "Determinant":
-                            sb.append(determinant(get(in.next())));
-                            break;
-                        default:
-                            throw new InputMismatchException("unknown command " + s + " after Matrix");
-                    }
-                    break;
-                case "TreeMap":
-                    s = in.next();
-                    switch(s){
-                        case "Size":
-                            sb.append(matrixMap.size());
-                            break;
-                        case "Keys":
-                            sb.append("Matrix Keys: ").append(matrixMap.toString());
-                            break;
-                        case "Info":
-                            ;
-                            break;
-                        case "HeadMap":
-                            ;
-                            break;
-                        case "TailMap":
-                            sb.append(matrixMap.tailMap(in.next()));
-                            break;
-                        case "DescendingKeySet":
-                            sb.append(matrixMap.descendingKeySet());
-                            break;
-                        case "FirstKey":
-                            ;
-                            break;
-                        case "LastKey":
-                            ;
-                            break;
-                        case "Exists":
-                            ;
-                            break;
-                        case "Remove":
-                            ;
-                            break;
-                        default:
-                            throw new InputMismatchException("unknown command " + s + " after TreeMap");
-                    }
-                    break;
-                default:
-                    sb.append(super.processIO(in, out));
-            }
+                s = in.next();
+                switch(s){
+                    case "Matrix":
+                        s = in.next();
+                        switch(s){
+                            case "Create":
+                                matrixMap.put(in.next(), createMatrix(in));
+                                break;
+                            case "Print":
+                                m = in.next();
+                                out.println(printMatrix(get(m)));
+                                sb.append(printMatrix(get(m)));
+                                break;
+                            case "Plus":
+                                if(result)
+                                    out.println(Arrays.toString(plusMatrix(get(in.next()), get(in.next()))));
+                                //sb.append(Arrays.toString(put(in.next(), plusMatrix(get(in.next()), get(in.next())))));
+                                break;
+                            case "Minus":
+                                if(result)
+                                    out.println(Arrays.toString(minusMatrix(get(in.next()), get(in.next()))));
+                                //sb.append(Arrays.toString(put(in.next(), minusMatrix(get(in.next()), get(in.next())))));
+                                break;
+                            case "Multiply":
+                                if(result)
+                                    out.println(Arrays.toString(multiplyMatrix(get(in.next()), get(in.next()))));
+                                sb.append(Arrays.toString(put(in.next(), multiplyMatrix(get(in.next()), get(in.next())))));
+                                break;
+                            case "PrintResult":
+                                result = true;
+                                break;
+                            case "Sum":
+                                out.println(sumMatrix(get(in.next())));
+                                sb.append(sumMatrix(get(in.next())));
+                                break;
+                            case "Determinant":
+                                out.println(determinant(get(in.next())));
+                                sb.append(determinant(get(in.next())));
+                                break;
+                            default:
+                                throw new InputMismatchException("unknown command " + s + " after Matrix");
+                        }
+                        break;
+                    case "TreeMap":
+                        s = in.next();
+                        switch(s){
+                            case "Size":
+                                out.println("Matrix Count: " + matrixMap.size());
+                                sb.append(matrixMap.size());
+                                break;
+                            case "Keys":
+                                out.println("Matrix Keys: " + matrixMap.descendingKeySet());
+                                sb.append(matrixMap.keySet());
+                                break;
+                            case "HeadMap":
+                                m = in.next();
+                                out.println("Matrices Less than " + m + ": " +  matrixMap.headMap(m).keySet());
+                                sb.append(matrixMap.headMap(m).keySet());
+                                break;
+                            case "TailMap":
+                                m = in.next();
+                                out.println("Matrices greater than " + m + ": " + matrixMap.tailMap(m).keySet());
+                                sb.append(matrixMap.tailMap(m).keySet());
+                                break;
+                            case "DescendingKeySet":
+                                out.println(matrixMap.descendingKeySet());
+                                sb.append(matrixMap.descendingKeySet());
+                                break;
+                            case "FirstKey":
+                                out.println(matrixMap.firstKey());
+                                sb.append(matrixMap.firstKey());
+                                break;
+                            case "LastKey":
+                                out.println(matrixMap.lastKey());
+                                sb.append(matrixMap.lastKey());
+                                break;
+                            case "Exists":
+                                m = in.next();
+                                out.println("Matrix " + m + " does" + (matrixMap.containsKey(m)? " " : " not ") + "exist");
+                                sb.append(matrixMap.containsKey(m));
+                                break;
+                            case "Remove":
+                                matrixMap.remove(in.next());
+                                break;
+                            default:
+                                throw new InputMismatchException("InputMismatchException unknown command " + s + " after TreeMap");
+                        }
+                        break;
+                    default:
+                        sb.append(s = super.processIO(new Scanner(s), out));
+                }
             }
             catch(Exception e){
-                System.out.println(e.getMessage());
+                sb.append(e.getMessage());
+                out.println(e.getMessage());
             }
         }
         return sb.toString();
@@ -124,7 +143,15 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                 matrix[i][j] = newElement(in.next());
         return matrix;
     }
-
+    
+    public E sumMatrix(E[][] matrix){
+        E sum = newElement("0");
+        for(int i = 0; i < matrix.length; ++i)
+            for(int j = 0; j < matrix[0].length; ++j)
+                sum = plus(sum, matrix[i][j]);
+        return sum;
+    }
+    
     public E[][] plusMatrix(E[][] m, E[][] n){
         if((m.length != n.length) || (m[0].length != n[0].length))
             throw new RuntimeException("matrices do not have same size");

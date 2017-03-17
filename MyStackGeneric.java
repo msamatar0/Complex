@@ -49,7 +49,7 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
     }
     public String processIO(java.util.Scanner in, java.io.PrintStream out){
         StringBuilder sb = new StringBuilder();
-
+        
         while(in.hasNext()){
             String s = in.next();
             try{
@@ -62,6 +62,8 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
                     sb.append(this);
                     out.println(this);
                 }
+                else if(s.length() > 1)
+                    throw new InputMismatchException("InputMismatchException too long: " + s);
                 else
                     try{
                         sb.append(binaryOperator(s));
