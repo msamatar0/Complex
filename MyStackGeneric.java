@@ -7,18 +7,24 @@ import java.util.InputMismatchException;
  */
 abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
     protected abstract E newElement(String elem) throws NumberFormatException;
+    
     public abstract E plus(E m, E n);
+    
     public abstract E minus(E m, E n);
+    
     public abstract E multiply(E m, E n);
+    
     protected void push(E o){
         add(o);
     }
+    
     protected E pop(){
         if(isEmpty()) return null;
         E n = get(size() - 1);
         remove(size() - 1);
         return n;
     }
+    
     public E binaryOperator(String operator) throws ArithmeticException, InputMismatchException{
         E o, o1, o2;
         switch(operator){
@@ -44,9 +50,11 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
                 if(operator.length() > 1)
                     throw new InputMismatchException("InputMismatchException unknown command: " + operator);
                 o = null;
+                break;
         }
         return o;
     }
+    
     public String processIO(java.util.Scanner in, java.io.PrintStream out){
         StringBuilder sb = new StringBuilder();
         
@@ -78,6 +86,7 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
         }
         return sb.toString();
     }
+    
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();

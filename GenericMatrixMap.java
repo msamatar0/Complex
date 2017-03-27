@@ -9,7 +9,7 @@ import java.util.*;
 
 abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     private final TreeMap<String, E[][]> matrixMap = new TreeMap<>
-        ((String a, String b) -> { return a.length() - b.length() == 0? b.compareTo(a) : b.length() - a.length(); } );
+        ((String a, String b) -> { return -(a.length() - b.length() == 0? b.compareTo(a) : b.length() - a.length()); } );
 
     @Override
     public abstract E plus(E m, E n);
@@ -37,7 +37,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                                 break;
                             case "Print":
                                 m = in.next();
-                                out.println(printMatrix(get(m)));
+                                out.println("Print Matrix with Key: " + m + "\n" + printMatrix(get(m)));
                                 sb.append(printMatrix(get(m)));
                                 break;
                             case "Plus":
@@ -67,7 +67,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                                 sb.append(determinant(get(in.next())));
                                 break;
                             default:
-                                throw new InputMismatchException("unknown command " + s + " after Matrix");
+                                throw new InputMismatchException("unknown command: " + s + " after Matrix");
                         }
                         break;
                     case "TreeMap":
@@ -78,7 +78,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                                 sb.append(matrixMap.size());
                                 break;
                             case "Keys":
-                                out.println("Matrix Keys: " + matrixMap.descendingKeySet());
+                                out.println("Matrix Keys: " + matrixMap.keySet());
                                 sb.append(matrixMap.keySet());
                                 break;
                             case "HeadMap":
@@ -96,23 +96,29 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                                 sb.append(matrixMap.descendingKeySet());
                                 break;
                             case "FirstKey":
-                                out.println(matrixMap.firstKey());
-                                sb.append(matrixMap.firstKey());
+                                out.println("First Key: " + matrixMap.firstKey());
+                                sb.append("First Key: " + matrixMap.firstKey());
                                 break;
                             case "LastKey":
-                                out.println(matrixMap.lastKey());
-                                sb.append(matrixMap.lastKey());
+                                out.println("Last Key: " + matrixMap.lastKey());
+                                sb.append("Last Key: " + matrixMap.lastKey());
                                 break;
                             case "Exists":
                                 m = in.next();
-                                out.println("Matrix " + m + " does" + (matrixMap.containsKey(m)? " " : " not ") + "exist");
+                                out.println("Matrix " + m + " does" + (matrixMap.containsKey(m)? " " : " not ") + "exist.");
                                 sb.append(matrixMap.containsKey(m));
                                 break;
                             case "Remove":
-                                matrixMap.remove(in.next());
+                                m = in.next();
+                                if(!matrixMap.containsKey(m))
+                                    out.println("Cannot remove " + m + " not in TreeMap");
+                                else{
+                                    out.println("Removing " + m);
+                                    matrixMap.remove(m);
+                                }
                                 break;
                             default:
-                                throw new InputMismatchException("InputMismatchException unknown command " + s + " after TreeMap");
+                                throw new InputMismatchException("InputMismatchException unknown command: " + s + " after TreeMap");
                         }
                         break;
                     default:
@@ -135,7 +141,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
         return matrixMap.put(k, v);
     }
 
-    protected final E[][] createMatrix(Scanner in){
+    protected E[][] createMatrix(Scanner in){
         int row = in.nextInt(), col = in.nextInt();
         E[][] matrix = (E[][])new Object[row][col];
         for(int i = 0; i < row; ++i)
@@ -151,7 +157,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                 sum = plus(sum, matrix[i][j]);
         return sum;
     }
-    
+
     public E[][] plusMatrix(E[][] m, E[][] n){
         if((m.length != n.length) || (m[0].length != n[0].length))
             throw new RuntimeException("matrices do not have same size");
@@ -196,13 +202,13 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
         StringBuilder sb = new StringBuilder("|");
         for(int i = 0; i < r.length; ++i)
             sb.append(String.format("%" + l + 2 + "s", r[i]));
-        return sb.append('|').toString();
+        return sb.append("|").toString();
     }
 
     private String[] sprintMatrix(E[][] m){
         int longest = m[0][0].toString().length();
         for(int i = 0; i < m.length; ++i)
-            for(int j = 0; j < m[0].length; ++j)
+            for(int j = 0; j < m[i].length; ++j)
                 if(m[i][j].toString().length() > longest)
                     longest = m[i][j].toString().length();
         String[] rows = new String[m.length];
@@ -210,12 +216,12 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
             rows[i] = sprintRow(m[i], longest);
         return rows;
     }
-    
+
     public String printMatrix(E[][] m){
         String rows[] = sprintMatrix(m);
         StringBuilder sb = new StringBuilder();
-        for(String i : rows)
-            sb.append(i).append('\n');
+        for(int i = 0; i < rows.length; ++i)
+            sb.append(rows[i]).append(i == rows.length - 1? "" : "\n");
         return sb.toString();
     }
 
@@ -226,18 +232,18 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
         StringBuilder expression = new StringBuilder();
         int height = Math.max(m1.length, m2.length);
         for(int i = 0; i < height; ++i)
-            expression.append(rows1[i] +
-                (i == height / 2? ("  " + op + "  ") : "     ") +
-                rows2[i] +
-                (i == height / 2? ("  =  ") : "     ") +
-                rows3[i] + '\n');
+            expression.append(rows1[i])
+                      .append(i == height / 2? ("  " + op + "  ") : "     ")
+                      .append(rows2[i]).append(i == height / 2? ("  =  ") : "     ")
+                      .append(rows3[i]).append('\n');
         return expression.toString();
     }
-    
+
     //Generic ver. of Professor Java determinant function
+    //Source: (http://professorjava.weebly.com/matrix-determinant.html)
     public E determinant(E[][] matrix){
         E sum = newElement("0"), s;
-        switch (matrix.length) {
+        switch(matrix.length){
             case 1:
                 return matrix[0][0];
             case 2:
@@ -250,7 +256,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                         minus(multiply(matrix[0][2], multiply(matrix[1][1], matrix[2][0])),
                                 minus(multiply(matrix[0][0], multiply(matrix[2][2], matrix[2][1])),
                                         multiply(matrix[0][1], multiply(matrix[1][0], matrix[2][2]))))
-                            );
+                );
             default:
                 for(int i = 0; i < matrix.length; i++){
                     E[][] smaller = (E[][])new Object[matrix.length-1][matrix.length-1];
