@@ -9,33 +9,29 @@ import java.util.*;
 
 abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     private final TreeMap<String, E[][]> matrixMap = new TreeMap<>
-            ((String a, String b) ->  -(a.length() - b.length() == 0? b.compareTo(a) : b.length() - a.length()) );
-
-    @Override
-    public abstract E plus(E m, E n);
-
-    @Override
-    public abstract E minus(E m, E n);
-
-    @Override
-    public abstract E multiply(E m, E n);
+        ((String a, String b) ->  -(a.length() - b.length() == 0? b.compareTo(a) : b.length() - a.length()));
+    
+    private boolean result = false;
 
     @Override
     public String processIO(Scanner in, PrintStream out){
         StringBuilder sb = new StringBuilder();
         String m, n, r, s;
-        boolean result = false;
         while(in.hasNext()){
             try{
                 s = in.next();
                 switch(s){
                     case "Matrix":
+                    case "matrix":
+                    case "m":
                         s = in.next();
                         switch(s){
                             case "Create":
+                            case "create":
                                 matrixMap.put(in.next(), createMatrix(in));
                                 break;
                             case "Print":
+                            case "print":
                                 m = in.next();
                                 if(matrixMap.containsKey(m))
                                     out.println("Print Matrix with Key: " + m + "\n" + printMatrix(get(m)) + "\n");
@@ -44,88 +40,99 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                                 //sb.append(printMatrix(get(m)));
                                 break;
                             case "Plus":
+                            case "plus":
                                 m = in.next();
                                 n = in.next();
                                 r = in.next();
-                                put(r, plusMatrix(get(m), get(n)));
-                                if(result)
-                                    out.println("Print Result " + m +  '+' + n + '=' + r + "\n"
-                                                + printResult(get(m), get(n), get(r), '+'));
+                                expHelper(out, m, n, r, '+');
                                 break;
                             case "Minus":
+                            case "minus":
                                 m = in.next();
                                 n = in.next();
                                 r = in.next();
-                                put(r, minusMatrix(get(m), get(n)));
-                                if(result)
-                                    out.println("Print Result " + m +  '-' + n + '=' + r + "\n"
-                                            + printResult(get(m), get(n), get(r), '-'));
+                                expHelper(out, m, n, r, '-');
                                 break;
                             case "Multiply":
+                            case "multiply":
                                 m = in.next();
                                 n = in.next();
                                 r = in.next();
-                                put(r, multiplyMatrix(get(m), get(n)));
-                                if(result)
-                                    out.println("Print Result " + m +  '-' + n + '=' + r + "\n"
-                                            + printResult(get(m), get(n), get(r), '-'));
+                                expHelper(out, m, n, r, '*');
                                 break;
                             case "PrintResult":
+                            case "pr":
                                 result = in.nextBoolean();
                                 break;
                             case "Sum":
+                            case "sum":
                                 m = in.next();
                                 out.println("Sum of " + m + " is " + sumMatrix(get(m)));
                                 sb.append(sumMatrix(get(m)));
                                 break;
                             case "Determinant":
+                            case "determinant":
+                            case "dt":
                                 m = in.next();
-                                out.println("Determinant of " + m + " is " + determinant(get(m)));
-                                sb.append(determinant(get(m)));
+                                if(get(m).length == get(m)[0].length)
+                                    out.println("Determinant of " + m + " is " + determinant(get(m)));
+                                else
+                                    out.println("Failed on " + m);
                                 break;
                             default:
                                 throw new InputMismatchException("unknown command: " + s + " after Matrix");
                         }
                         break;
                     case "TreeMap":
+                    case "treemap":
+                    case "tm":
                         s = in.next();
                         switch(s){
                             case "Size":
+                            case "size":
                                 out.println("Matrix Count: " + matrixMap.size());
                                 sb.append(matrixMap.size());
                                 break;
                             case "Keys":
+                            case "keys":
                                 out.println("Matrix Keys: " + matrixMap.keySet());
                                 sb.append(matrixMap.keySet());
                                 break;
                             case "HeadMap":
+                            case "head":
                                 m = in.next();
                                 out.println("Matrices Less than " + m + ": " +  matrixMap.headMap(m).keySet());
                                 sb.append(matrixMap.headMap(m).keySet());
                                 break;
                             case "TailMap":
+                            case "tail":
                                 m = in.next();
                                 out.println("Matrices greater than " + m + ": " + matrixMap.tailMap(m).keySet());
                                 sb.append(matrixMap.tailMap(m).keySet());
                                 break;
                             case "DescendingKeySet":
+                            case "dks":
                                 out.println(matrixMap.descendingKeySet());
                                 sb.append(matrixMap.descendingKeySet());
                                 break;
                             case "FirstKey":
+                            case "first":
                                 out.println("First Key: " + matrixMap.firstKey());
-                                sb.append("First Key: " + matrixMap.firstKey());
+                                sb.append("First Key: ").append(matrixMap.firstKey());
                                 break;
                             case "LastKey":
+                            case "last":
                                 out.println("Last Key: " + matrixMap.lastKey());
-                                sb.append("Last Key: " + matrixMap.lastKey());
+                                sb.append("Last Key: ").append(matrixMap.lastKey());
                                 break;
                             case "Exists":
+                            case "exists":
                                 m = in.next();
                                 out.println("Matrix " + m + " does" + (matrixMap.containsKey(m)? " " : " not ") + "exist.");
                                 sb.append(matrixMap.containsKey(m));
                                 break;
                             case "Remove":
+                            case "remove":
                                 m = in.next();
                                 if(!matrixMap.containsKey(m))
                                     out.println("Cannot remove " + m + " not in TreeMap");
@@ -134,8 +141,15 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                                     matrixMap.remove(m);
                                 }
                                 break;
+                            case "Info":
+                            case "info":
+                                out.println("Matrix Info:");
+                                String[] keys = (String[])(matrixMap.keySet().toArray());
+                                for(String i : keys)
+                                    out.println(String.format("\t%s %d %d", i, get(i).length, get(i)[0].length));
+                                break;
                             default:
-                                throw new InputMismatchException("InputMismatchException unknown command: " + s + " after TreeMap");
+                                throw new InputMismatchException("unknown command: " + s + " after TreeMap");
                         }
                         break;
                     default:
@@ -148,6 +162,35 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
             }
         }
         return sb.toString();
+    }
+    
+    private void expHelper(PrintStream out, String m, String n, String r, char op){
+        E[][] rm = null;
+        try{
+            switch(op){
+                case '+':
+                    rm = plusMatrix(get(m), get(n));
+                    break;
+                case '-':
+                    rm = minusMatrix(get(m), get(n));
+                    break;
+                case '*':
+                    rm = multiplyMatrix(get(m), get(n));
+                    break;
+            }
+            put(r, rm);
+            if(result)
+                out.println("Print Result " + m +  " " + op + " " + n + " = " + r + "\n"
+                            + printResult(get(m), get(n), get(r), op));
+            }
+        catch(NullPointerException nu){
+            out.println("Failed on " + m + op + n);
+            throw new NullPointerException("NullPointerException " + (get(m) == null? "first" : "second") + " matrix argument is null");
+        }
+        catch(RuntimeException e){
+            out.println("Failed on " + m + op + n);
+            throw new RuntimeException("ArithmeticException matrices do not have same size");
+        }
     }
 
     public E[][] get(String key){
@@ -177,42 +220,46 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
 
     public E[][] plusMatrix(E[][] m, E[][] n){
         if((m.length != n.length) || (m[0].length != n[0].length))
-            throw new RuntimeException("matrices do not have same size");
+            throw new RuntimeException();
 
-        E[][] result = (E[][])new Object[m.length][m[0].length];
+        E[][] sum = (E[][])new Object[m.length][m[0].length];
 
-        for(int i = 0; i < result.length; i++)
-            for(int j = 0; j < result[i].length; j++)
-                result[i][j] = plus(m[i][j], n[i][j]);
+        for(int i = 0; i < sum.length; i++)
+            for(int j = 0; j < sum[i].length; j++)
+                sum[i][j] = plus(m[i][j], n[i][j]);
 
-        return result;
+        return sum;
     }
 
     public E[][] minusMatrix(E[][] m, E[][] n){
         if((m.length != n.length) || (m[0].length != n[0].length))
-            throw new RuntimeException("matrices do not have same size");
+            throw new RuntimeException();
 
-        E[][] result = (E[][])new Object[m.length][m[0].length];
+        E[][] difference = (E[][])new Object[m.length][m[0].length];
 
-        for(int i = 0; i < result.length; i++)
-            for(int j = 0; j < result[i].length; j++)
-                result[i][j] = minus(m[i][j], n[i][j]);
+        for(int i = 0; i < difference.length; i++)
+            for(int j = 0; j < difference[i].length; j++)
+                difference[i][j] = minus(m[i][j], n[i][j]);
 
-        return result;
+        return difference;
     }
 
     public E[][] multiplyMatrix(E[][] m, E[][] n){
         if(m[0].length != n.length)
-            throw new RuntimeException("matrices do not have compatible size");
+            throw new RuntimeException();
 
-        E[][] result = (E[][])new Object[m.length][n[0].length];
+        E[][] product = (E[][])new Object[m.length][n[0].length];
+        
+        for (E[] i : product)
+            for (int j = 0; j < product[0].length; j++)
+                i[j] = newElement("0");
 
-        for(int i = 0; i < result.length; i++)
-            for(int j = 0; j < result[0].length; j++)
+        for(int i = 0; i < product.length; i++)
+            for(int j = 0; j < product[0].length; j++)
                 for(int k = 0; k < m[0].length; k++)
-                    result[i][j] = plus(result[i][j], multiply(m[i][k], n[k][j]));
+                    product[i][j] = plus(product[i][j], multiply(m[i][k], n[k][j]));
 
-        return result;
+        return product;
     }
 
     private String sprintRow(E[] r, int l){
