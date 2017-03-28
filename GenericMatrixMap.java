@@ -9,7 +9,7 @@ import java.util.*;
 
 abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     private final TreeMap<String, E[][]> matrixMap = new TreeMap<>
-        ((String a, String b) -> { return -(a.length() - b.length() == 0? b.compareTo(a) : b.length() - a.length()); } );
+            ((String a, String b) ->  -(a.length() - b.length() == 0? b.compareTo(a) : b.length() - a.length()) );
 
     @Override
     public abstract E plus(E m, E n);
@@ -23,7 +23,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     @Override
     public String processIO(Scanner in, PrintStream out){
         StringBuilder sb = new StringBuilder();
-        String m, s;
+        String m, n, r, s;
         boolean result = false;
         while(in.hasNext()){
             try{
@@ -37,34 +37,51 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                                 break;
                             case "Print":
                                 m = in.next();
-                                out.println("Print Matrix with Key: " + m + "\n" + printMatrix(get(m)));
-                                sb.append(printMatrix(get(m)));
+                                if(matrixMap.containsKey(m))
+                                    out.println("Print Matrix with Key: " + m + "\n" + printMatrix(get(m)) + "\n");
+                                else
+                                    out.println("Cannot Print Matrix " + m + " it does not exists.");
+                                //sb.append(printMatrix(get(m)));
                                 break;
                             case "Plus":
+                                m = in.next();
+                                n = in.next();
+                                r = in.next();
+                                put(r, plusMatrix(get(m), get(n)));
                                 if(result)
-                                    out.println(Arrays.toString(plusMatrix(get(in.next()), get(in.next()))));
-                                //sb.append(Arrays.toString(put(in.next(), plusMatrix(get(in.next()), get(in.next())))));
+                                    out.println("Print Result " + m +  '+' + n + '=' + r + "\n"
+                                                + printResult(get(m), get(n), get(r), '+'));
                                 break;
                             case "Minus":
+                                m = in.next();
+                                n = in.next();
+                                r = in.next();
+                                put(r, minusMatrix(get(m), get(n)));
                                 if(result)
-                                    out.println(Arrays.toString(minusMatrix(get(in.next()), get(in.next()))));
-                                //sb.append(Arrays.toString(put(in.next(), minusMatrix(get(in.next()), get(in.next())))));
+                                    out.println("Print Result " + m +  '-' + n + '=' + r + "\n"
+                                            + printResult(get(m), get(n), get(r), '-'));
                                 break;
                             case "Multiply":
+                                m = in.next();
+                                n = in.next();
+                                r = in.next();
+                                put(r, multiplyMatrix(get(m), get(n)));
                                 if(result)
-                                    out.println(Arrays.toString(multiplyMatrix(get(in.next()), get(in.next()))));
-                                sb.append(Arrays.toString(put(in.next(), multiplyMatrix(get(in.next()), get(in.next())))));
+                                    out.println("Print Result " + m +  '-' + n + '=' + r + "\n"
+                                            + printResult(get(m), get(n), get(r), '-'));
                                 break;
                             case "PrintResult":
-                                result = true;
+                                result = in.nextBoolean();
                                 break;
                             case "Sum":
-                                out.println(sumMatrix(get(in.next())));
-                                sb.append(sumMatrix(get(in.next())));
+                                m = in.next();
+                                out.println("Sum of " + m + " is " + sumMatrix(get(m)));
+                                sb.append(sumMatrix(get(m)));
                                 break;
                             case "Determinant":
-                                out.println(determinant(get(in.next())));
-                                sb.append(determinant(get(in.next())));
+                                m = in.next();
+                                out.println("Determinant of " + m + " is " + determinant(get(m)));
+                                sb.append(determinant(get(m)));
                                 break;
                             default:
                                 throw new InputMismatchException("unknown command: " + s + " after Matrix");
@@ -122,7 +139,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                         }
                         break;
                     default:
-                        sb.append(s = super.processIO(new Scanner(s), out));
+                        sb.append(super.processIO(new Scanner(s), out));
                 }
             }
             catch(Exception e){
@@ -201,7 +218,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     private String sprintRow(E[] r, int l){
         StringBuilder sb = new StringBuilder("|");
         for(int i = 0; i < r.length; ++i)
-            sb.append(String.format("%" + l + 2 + "s", r[i]));
+            sb.append(String.format("  %" + l + "s", r[i]));
         return sb.append("|").toString();
     }
 

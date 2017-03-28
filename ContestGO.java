@@ -33,14 +33,13 @@ public class ContestGO{
 }
 
 abstract class Shape implements Comparable<Shape>{
-    protected String fill,
-           name;
+    protected String fill;
     protected boolean isFilled;
     protected Date date;
     protected abstract double area();
     @Override
     public String toString(){
-        return String.format("%s\t%,.2f\t%s\t%b\t%s", name, area(), fill, isFilled, date);
+        return String.format("%s\t%,.2f\t%s\t%b\t%s", getClass().getSimpleName(), area(), fill, isFilled, date);
     }
     @Override
     public int compareTo(Shape o){
@@ -52,7 +51,6 @@ abstract class Shape implements Comparable<Shape>{
 class Circle extends Shape{
     private double radius = 0;
     public Circle(Scanner in){
-        name = "Circle";
         radius = in.nextDouble();
         fill = in.next();
         isFilled = in.nextBoolean();
@@ -68,7 +66,6 @@ class Ellipse extends Shape{
     private double minor = 0,
             major = 0;
     public Ellipse(Scanner in){
-        name = "Ellipse";
         minor = in.nextDouble();
         major = in.nextDouble();
         fill = in.next();
@@ -84,7 +81,6 @@ class Ellipse extends Shape{
 class Hexagon extends Shape{
     private double side = 0;
     public Hexagon(Scanner in){
-        name = "Ellipse";
         side = in.nextDouble();
         fill = in.next();
         isFilled = in.nextBoolean();
