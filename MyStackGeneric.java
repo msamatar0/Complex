@@ -31,26 +31,29 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
             case "+":
                 o1 = pop();
                 o2 = pop();
+                if(o1 == null || o2 == null)
+                    throw new ArithmeticException("ArithmeticException need two operands");
                 o = plus(o2, o1);
                 push(o);
                 break;
             case "-":
                 o1 = pop();
                 o2 = pop();
+                if(o1 == null || o2 == null)
+                    throw new ArithmeticException("ArithmeticException need two operands");
                 o = minus(o2, o1);
                 push(o);
                 break;
             case "*":
                 o1 = pop();
                 o2 = pop();
+                if(o1 == null || o2 == null)
+                    throw new ArithmeticException("ArithmeticException need two operands");
                 o = multiply(o2, o1);
                 push(o);
                 break;
             default:
-                if(operator.length() > 1)
-                    throw new InputMismatchException("InputMismatchException unknown command: " + operator);
-                o = null;
-                break;
+                throw new InputMismatchException("InputMismatchException unknown command: " + operator);
         }
         return o;
     }
@@ -67,8 +70,8 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
             }
             catch(NumberFormatException e){
                 if(s.equals("p")){
-                    sb.append(this);
                     out.println(this);
+                    sb.append(this);
                 }
                 else if(s.length() > 1)
                     throw new InputMismatchException("InputMismatchException too long: " + s);

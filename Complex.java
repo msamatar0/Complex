@@ -7,8 +7,8 @@ import java.util.regex.Pattern;
  * @author msamatar0
  */
 public class Complex implements Comparable<Complex>{
-    private double real = 0;
-    private double imag = 0;
+    private double real = 0.0;
+    private double imag = 0.0;
     public Complex(){}
     public Complex(double d){
         if(d < 0){
