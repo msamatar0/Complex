@@ -11,8 +11,7 @@ public class ContestGO{
         while(in.hasNext())
             ar.add(getShape(in));
         Collections.sort(ar);
-        for(Shape i : ar)
-            System.out.println(i);
+        ar.stream().forEach(System.out::println);
     }
     private static Shape getShape(Scanner in){
         Shape shape = null;

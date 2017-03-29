@@ -6,10 +6,11 @@ import java.util.regex.Pattern;
  *
  * @author msamatar0
  */
-public class Complex implements Comparable<Complex>{
-    private double real = 0.0;
-    private double imag = 0.0;
+public class Complex extends Number implements Comparable<Complex>{
+    private double real = 0.0, imag = 0.0;
+    
     public Complex(){}
+    
     public Complex(double d){
         if(d < 0){
             d *= -1;
@@ -17,10 +18,12 @@ public class Complex implements Comparable<Complex>{
         }
         real = Math.sqrt(d);
     }
+    
     public Complex(double r, double i){
         real = r;
         imag = i;
     }
+    
     public Complex(String s) throws NumberFormatException{
         Pattern p = Pattern.compile("(?<real>^-?\\d*\\.?\\d+?)??" + "(?<imag>[-+]*\\d*\\.?\\d*i$)??");
         Matcher m = p.matcher(s);
@@ -36,12 +39,20 @@ public class Complex implements Comparable<Complex>{
                 String i = m.group("imag").replace("i", "");
                 switch(i.length()){
                     case 1:
-                        if(i.equals("+"))
+                    switch (i){
+                        case "+":
                             imag = 1;
-                        else if(i.equals("-"))
+                            break;
+                        case "-":
                             imag = -1;
-                        else if(i.equals("i"))
+                            break;
+                        case "i":
                             imag = 1;
+                            break;
+                        default:
+                            imag = Double.parseDouble(i);
+                            break;
+                    }
                         break;
                     default:
                         imag = i.equals("")? 1 : Double.parseDouble(i);
@@ -55,52 +66,86 @@ public class Complex implements Comparable<Complex>{
             throw new NumberFormatException();
         }
     }
+    
     public double getReal(){
         return real;
     }
+    
     public double getImag(){
         return imag;
     }
+    
+    @Override
+    public int intValue(){
+        return (int)real;
+    }
+
+    @Override
+    public long longValue(){
+        return (long)real;
+    }
+
+    @Override
+    public float floatValue(){
+        return (float)real;
+    }
+
+    @Override
+    public double doubleValue(){
+        return real;
+    }
+    
     public Complex plus(Complex c){
         return new Complex(real + c.real, imag + c.imag);
     }
+    
     public Complex minus(Complex c){
         return new Complex(real - c.real, imag - c.imag);
     }
+    
     public Complex multiply(Complex c){
-        double r = real * c.real + imag + c.imag,
-               i = real * c.imag + imag + c.real;
+        double r = real * c.real - imag * c.imag,
+               i = real * c.imag + imag * c.real;
         return new Complex(r, i);
     }
+    
     public Complex divide(Complex c){
         double d = Math.pow(c.real, 2) + Math.pow(real, real),
-               r = real * c.real + imag * c.imag / d,
+               r = real * c.real - imag * c.imag / d,
                i = imag * c.real + imag * c.imag / d;
         return new Complex(r, i);
     }
+    
     public Complex set(double r, double i){
         return new Complex(r, i);
     }
+    
     public Complex set(String s){
         return new Complex(s);
     }
+    
+    @Override
+    public int compareTo(Complex c){
+        return (int)(real == c.real? imag - c.imag: real - c.real);
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        Complex c = (Complex)o;
+        return real == c.real && imag == c.imag;
+    }
+    
     @Override
     public String toString(){
+        if(real == 0 && imag == 0)
+            return String.format("%,.2f", real);
         if(real == 0)
             return String.format("%,.2fi", imag);
         if(imag == 0)
             return String.format("%,.2f", real);
         return String.format("%,.2f%c%,.2fi", real, (imag >= 0? '+' : '-'), Math.abs(imag));
     }
-    @Override
-    public int compareTo(Complex c){
-        return (int)(real == c.real? imag - c.imag: real - c.real);
-    }
-    @Override
-    public boolean equals(Object o){
-        Complex c = (Complex)o;
-        return real == c.real && imag == c.imag;
-    }
+    
     public static void main(String[] args){
         Scanner in = new Scanner(System.in);
         String s = null;

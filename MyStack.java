@@ -21,7 +21,7 @@ public class MyStack extends ArrayList<Integer>{
         }
         return sb.toString();
     }
-    public static void main(String[] args) {
+    public static void main(String[] args){
         Scanner in = new Scanner(System.in);
         MyStack ms = new MyStack();
         String s; 

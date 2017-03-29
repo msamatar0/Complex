@@ -61,7 +61,6 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                                 expHelper(out, m, n, r, '*');
                                 break;
                             case "PrintResult":
-                            case "pr":
                                 result = in.nextBoolean();
                                 break;
                             case "Sum":
@@ -155,7 +154,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                 }
             }
             catch(Exception e){
-                out.println(e.getMessage() == null? "NullPointerException null" : e.getMessage());
+                out.println(e instanceof NullPointerException? "NullPointerException null" : e.getMessage());
             }
         }
         return sb.toString();
@@ -312,7 +311,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
             case 2:
                 return minus(multiply(matrix[0][0], matrix[1][1]), multiply(matrix[0][1], matrix[1][0]));
             case 3:
-                Object[] terms = {
+                Object[] terms ={
                     multiply(matrix[0][0], multiply(matrix[1][1], matrix[2][2])),
                     multiply(matrix[0][1], multiply(matrix[1][2], matrix[2][0])),
                     multiply(matrix[0][2], multiply(matrix[1][0], matrix[2][1])),
