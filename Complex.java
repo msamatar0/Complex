@@ -131,8 +131,19 @@ public class Complex extends Number implements Comparable<Complex>{
     
     @Override
     public boolean equals(Object o){
-        Complex c = (Complex)o;
-        return real == c.real && imag == c.imag;
+        if(o instanceof Complex){
+            Complex c = (Complex)o;
+            return real == c.real && imag == c.imag;
+        }
+        else
+            return false;
+    }
+
+    @Override
+    public int hashCode(){
+        int hash = 7;
+        hash = 97 * hash + (int)(Double.doubleToLongBits(this.real) ^ (Double.doubleToLongBits(this.real) >>> 32));
+        return hash;
     }
     
     @Override
