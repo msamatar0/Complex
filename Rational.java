@@ -12,14 +12,12 @@ public class Rational extends Number implements Comparable<Rational>{
     
     public Rational(String s) throws NumberFormatException{
         long n = 0, d = 0;
-        boolean one = s.matches("^-?\\d+$"),
-                two = s.matches("^-?\\d+/-?\\d+$");
-        if(two){
+        if(s.matches("^-?\\d+/-?\\d+$")){
             String part[] = s.split("/");
             n = Long.parseLong(part[0]);
             d = Long.parseLong(part[1]);
         }
-        else if(one){
+        else if(s.matches("^-?\\d+$")){
             n = Long.parseLong(s);
             d = 1;
         }
