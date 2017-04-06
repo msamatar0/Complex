@@ -25,9 +25,6 @@ public class Rational extends Number implements Comparable<Rational>{
         }
         else
             throw new NumberFormatException();
-//throw new InputMismatchException("InputMismatchException unknown command: " + s);
-        //if(d == 0)
-            //throw new InputMismatchException("InputMismatchException too long: " + s);
         long g = gcd(n, d);
         numerator = (d > 0? 1 : -1) * n / g;
         denominator = Math.abs(d) / g;
