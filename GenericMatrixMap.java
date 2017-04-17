@@ -9,10 +9,10 @@ import java.util.*;
 
 abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
     private final TreeMap<String, E[][]> matrixMap = new TreeMap<>
-        ((String a, String b) ->  -(a.length() - b.length() == 0? b.compareTo(a) : b.length() - a.length()));
+            ((String a, String b) ->  -(a.length() - b.length() == 0? b.compareTo(a) : b.length() - a.length()));
     
     private boolean result = false;
-
+    
     @Override
     public String processIO(Scanner in, PrintStream out){
         StringBuilder sb = new StringBuilder();
@@ -63,6 +63,11 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                             case "PrintResult":
                                 result = in.nextBoolean();
                                 break;
+                            case "Name":
+                            case "name":
+                                m = in.next();
+                                E[][] matrix = get(m);
+                                output(out, sb, m + " " + matrix.length + " " + matrix[0].length);
                             case "Sum":
                             case "sum":
                                 m = in.next();
@@ -146,7 +151,8 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                 }
             }
             catch(Exception e){
-                output(out, sb, e instanceof NullPointerException? "NullPointerException null" : e.getMessage());
+                if(e.getMessage() != null)
+                    output(out, sb, e instanceof NullPointerException? "NullPointerException null" : e.getMessage());
             }
         }
         return sb.toString();
@@ -175,8 +181,8 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
             put(r, rm);
             if(result)
                 output(out, sb, "Print Result " + m +  " " + op + " " + n + " = " + r + "\n"
-                            + printResult(get(m), get(n), get(r), op));
-            }
+                        + printResult(get(m), get(n), get(r), op));
+        }
         catch(NullPointerException nu){
             out.println("Failed on " + m + op + n);
             throw new NullPointerException("NullPointerException " + (get(m) == null? "first" : "second") + " matrix argument is null");
@@ -186,16 +192,20 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
             throw new RuntimeException("ArithmeticException matrices do not have same size");
         }
     }
-
+    
+    public int size(){
+        return matrixMap.size();
+    }
+    
     public E[][] get(String key){
         return matrixMap.get(key);
     }
-
+    
     public E[][] put(String k, E[][] v){
         return matrixMap.put(k, v);
     }
-
-    protected E[][] createMatrix(Scanner in){
+    
+    private E[][] createMatrix(Scanner in){
         int row = in.nextInt(), col = in.nextInt();
         E[][] matrix = (E[][])new Object[row][col];
         for(int i = 0; i < row; ++i)
@@ -211,58 +221,58 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                 sum = plus(sum, matrix[i][j]);
         return sum;
     }
-
+    
     public E[][] plusMatrix(E[][] m, E[][] n){
         if((m.length != n.length) || (m[0].length != n[0].length))
             throw new RuntimeException();
-
+        
         E[][] sum = (E[][])new Object[m.length][m[0].length];
-
+        
         for(int i = 0; i < sum.length; i++)
             for(int j = 0; j < sum[i].length; j++)
                 sum[i][j] = plus(m[i][j], n[i][j]);
-
+        
         return sum;
     }
-
+    
     public E[][] minusMatrix(E[][] m, E[][] n){
         if((m.length != n.length) || (m[0].length != n[0].length))
             throw new RuntimeException();
-
+        
         E[][] difference = (E[][])new Object[m.length][m[0].length];
-
+        
         for(int i = 0; i < difference.length; i++)
             for(int j = 0; j < difference[i].length; j++)
                 difference[i][j] = minus(m[i][j], n[i][j]);
-
+        
         return difference;
     }
-
+    
     public E[][] multiplyMatrix(E[][] m, E[][] n){
         if(m[0].length != n.length)
             throw new RuntimeException();
-
+        
         E[][] product = (E[][])new Object[m.length][n[0].length];
         
         for (E[] i : product)
             for (int j = 0; j < product[0].length; j++)
                 i[j] = newElement("0");
-
+        
         for(int i = 0; i < product.length; i++)
             for(int j = 0; j < product[0].length; j++)
                 for(int k = 0; k < m[0].length; k++)
                     product[i][j] = plus(product[i][j], multiply(m[i][k], n[k][j]));
-
+        
         return product;
     }
-
+    
     private String sprintRow(E[] r, int l){
         StringBuilder sb = new StringBuilder("|");
         for(int i = 0; i < r.length; ++i)
             sb.append(String.format("  %" + l + "s", r[i]));
         return sb.append("|").toString();
     }
-
+    
     private String[] sprintMatrix(E[][] m){
         int longest = m[0][0].toString().length();
         for(int i = 0; i < m.length; ++i)
@@ -274,7 +284,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
             rows[i] = sprintRow(m[i], longest);
         return rows;
     }
-
+    
     public String printMatrix(E[][] m){
         String rows[] = sprintMatrix(m);
         StringBuilder sb = new StringBuilder();
@@ -282,20 +292,20 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
             sb.append(rows[i]).append(i == rows.length - 1? "" : "\n");
         return sb.toString();
     }
-
+    
     public String printResult(E[][] m1, E[][] m2, E[][] m3, char op){
         String rows1[] = sprintMatrix(m1),
-               rows2[] = sprintMatrix(m2),
-               rows3[] = sprintMatrix(m3);
+                rows2[] = sprintMatrix(m2),
+                rows3[] = sprintMatrix(m3);
         StringBuilder expression = new StringBuilder();
         int height = Math.max(m1.length, m2.length);
         for(int i = 0; i < height; ++i)
             expression.append(i >= rows1.length? String.format("%" + rows1[rows1.length - 1].length() + "s", "") : rows1[i])
-                      .append(i == m1.length / 2? ("  " + op + "  ") : "     ")
-                      .append(i >= rows2.length? String.format("%" + rows2[rows2.length - 1].length() + "s", "") : rows2[i])
-                      .append(i == m1.length / 2? ("  =  ") : "     ")
-                      .append(i >= rows3.length? "" : rows3[i])
-                      .append('\n');
+                    .append(i == m1.length / 2? ("  " + op + "  ") : "     ")
+                    .append(i >= rows2.length? String.format("%" + rows2[rows2.length - 1].length() + "s", "") : rows2[i])
+                    .append(i == m1.length / 2? ("  =  ") : "     ")
+                    .append(i >= rows3.length? "" : rows3[i])
+                    .append('\n');
         return expression.toString();
     }
     
@@ -310,12 +320,12 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
                 return minus(multiply(matrix[0][0], matrix[1][1]), multiply(matrix[0][1], matrix[1][0]));
             case 3:
                 Object[] terms = {
-                    multiply(matrix[0][0], multiply(matrix[1][1], matrix[2][2])),
-                    multiply(matrix[0][1], multiply(matrix[1][2], matrix[2][0])),
-                    multiply(matrix[0][2], multiply(matrix[1][0], matrix[2][1])),
-                    multiply(matrix[0][2], multiply(matrix[1][1], matrix[2][0])),
-                    multiply(matrix[0][0], multiply(matrix[1][2], matrix[2][1])),
-                    multiply(matrix[0][1], multiply(matrix[1][0], matrix[2][2]))
+                        multiply(matrix[0][0], multiply(matrix[1][1], matrix[2][2])),
+                        multiply(matrix[0][1], multiply(matrix[1][2], matrix[2][0])),
+                        multiply(matrix[0][2], multiply(matrix[1][0], matrix[2][1])),
+                        multiply(matrix[0][2], multiply(matrix[1][1], matrix[2][0])),
+                        multiply(matrix[0][0], multiply(matrix[1][2], matrix[2][1])),
+                        multiply(matrix[0][1], multiply(matrix[1][0], matrix[2][2]))
                 };
                 return minus(plus((E)(terms[0]), plus((E)(terms[1]), (E)(terms[2]))),
                         plus((E)(terms[3]), plus((E)(terms[4]), (E)(terms[5]))));
@@ -340,7 +350,7 @@ abstract class GenericMatrixMap<E> extends MyStackGeneric<E>{
         }
         return sum;
     }
-
+    
     @Override
     public String toString(){
         return super.toString();

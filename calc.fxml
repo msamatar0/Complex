@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane fx:id="tabs" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="689.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CalcController">
+  <tabs>
+    <Tab text="Matrix Commands">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="621.0">
+               <children>
+                  <BorderPane prefHeight="490.0" prefWidth="689.0">
+                     <bottom>
+                        <Pane prefHeight="205.0" prefWidth="690.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <ScrollPane fx:id="scrPane" prefHeight="200.0" prefWidth="689.0">
+                                 <content>
+                                    <TextArea fx:id="outputWindow" editable="false" prefHeight="187.0" prefWidth="689.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </Pane>
+                     </bottom>
+                     <left>
+                        <Pane prefHeight="117.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Button fx:id="detBtn" layoutX="50.0" layoutY="174.0" mnemonicParsing="false" onAction="#handleUnaryOp" prefHeight="32.0" prefWidth="97.0" text="Determinant" />
+                              <Button fx:id="sumBtn" layoutX="79.0" layoutY="123.0" mnemonicParsing="false" onAction="#handleUnaryOp" prefHeight="33.0" prefWidth="40.0" text="Sum" />
+                              <ComboBox fx:id="matrixBox" layoutX="25.0" layoutY="22.0" prefHeight="31.0" prefWidth="150.0" promptText="Select Matrix" />
+                              <Button fx:id="printBtn" layoutX="71.0" layoutY="71.0" mnemonicParsing="false" onAction="#handleUnaryOp" prefHeight="33.0" prefWidth="57.0" text="Print" />
+                           </children>
+                        </Pane>
+                     </left>
+                     <right>
+                        <Pane prefHeight="236.0" prefWidth="490.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <ComboBox fx:id="m1Box" layoutX="56.0" layoutY="43.0" prefHeight="35.0" prefWidth="158.0" promptText="Select Matrix 1" />
+                              <ComboBox fx:id="m2Box" layoutX="278.0" layoutY="43.0" prefHeight="35.0" prefWidth="158.0" promptText="Select Matrix 2" />
+                              <Button fx:id="addBtn" layoutX="66.0" layoutY="159.0" mnemonicParsing="false" onAction="#handleBinaryOp" prefHeight="41.0" prefWidth="69.0" text="Plus" />
+                              <Button fx:id="subtractBtn" layoutX="207.0" layoutY="158.0" mnemonicParsing="false" onAction="#handleBinaryOp" prefHeight="43.0" prefWidth="74.0" text="Minus" />
+                              <Button fx:id="multiplyBtn" layoutX="366.0" layoutY="157.0" mnemonicParsing="false" onAction="#handleBinaryOp" prefHeight="47.0" prefWidth="70.0" text="Multiply" />
+                              <TextField fx:id="newName" layoutX="170.0" layoutY="110.0" promptText="Matrix Name:" />
+                              <CheckBox fx:id="printSwitch" layoutX="208.0" layoutY="9.0" mnemonicParsing="false" onAction="#handlePrintSwitched" text="Print Result" />
+                           </children>
+                        </Pane>
+                     </right>
+                     <top>
+                        <Pane prefHeight="40.0" prefWidth="690.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <TextField fx:id="console" layoutX="7.0" layoutY="8.0" onAction="#handleCommandEntered" prefHeight="25.0" prefWidth="673.0" promptText="Enter Console Command:" />
+                           </children>
+                        </Pane>
+                     </top>
+                  </BorderPane>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Create Matrix">
+         <content>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <BorderPane fx:id="createPane" layoutX="-1.0" prefHeight="488.0" prefWidth="689.0">
+                     <top>
+                        <Pane prefHeight="60.0" prefWidth="689.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <TextField fx:id="nameField" layoutX="79.0" layoutY="18.0" prefHeight="25.0" prefWidth="96.0" promptText="Name:" />
+                              <TextField fx:id="rowField" layoutX="227.0" layoutY="18.0" prefHeight="25.0" prefWidth="90.0" promptText="Length:" />
+                              <TextField fx:id="colField" layoutX="372.0" layoutY="18.0" prefHeight="25.0" prefWidth="90.0" promptText="Width:" />
+                              <Button fx:id="enterBtn" layoutX="536.0" layoutY="18.0" mnemonicParsing="false" onAction="#handleEnterButton" prefHeight="0.0" prefWidth="61.0" text="Enter" />
+                           </children>
+                        </Pane>
+                     </top>
+                     <bottom>
+                        <Pane prefHeight="40.0" prefWidth="689.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Button fx:id="createBtn" layoutX="319.0" layoutY="8.0" mnemonicParsing="false" onAction="#handleCreateButton" text="Create" visible="false" />
+                           </children>
+                        </Pane>
+                     </bottom>
+                  </BorderPane>
+               </children>
+            </AnchorPane>
+         </content>
+    </Tab>
+  </tabs>
+</TabPane>
