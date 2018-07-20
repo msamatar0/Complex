@@ -69,21 +69,21 @@ abstract class MyStackGeneric<E> extends java.util.ArrayList<E>{
                 sb.append(o);
             }
             catch(NumberFormatException e){
-                    if(s.equals("p")){
-                        out.println(this);
-                        sb.append(this);
+                if(s.equals("p")){
+                    out.println(this);
+                    sb.append(this);
+                }
+                else if(s.length() > 1)
+                    throw new InputMismatchException("InputMismatchException too long: " + s);
+                else
+                    try{
+                        sb.append(binaryOperator(s));
                     }
-                    else if(s.length() > 1)
-                        throw new InputMismatchException("InputMismatchException too long: " + s);
-                    else
-                        try{
-                            sb.append(binaryOperator(s));
-                        }
-                        catch(InputMismatchException ie){
-                            String ex = ie.getMessage();
-                            sb.append(ex);
-                            out.println(ex);
-                        }
+                    catch(InputMismatchException ie){
+                        String ex = ie.getMessage();
+                        sb.append(ex);
+                        out.println(ex);
+                    }
             }
             sb.append(' ');
         }
